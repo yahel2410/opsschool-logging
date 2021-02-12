@@ -1,0 +1,26 @@
+#!/bin/bash
+set -e
+
+echo "INFO: userdata started"
+
+# elasticsearch
+wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-oss-7.10.2-amd64.deb
+dpkg -i elasticsearch-*.deb
+systemctl enable elasticsearch
+systemctl start elasticsearch
+
+# kibana
+wget https://artifacts.elastic.co/downloads/kibana/kibana-oss-7.10.2-amd64.deb
+dpkg -i kibana-*.deb
+echo 'server.host: "0.0.0.0"' > /etc/kibana/kibana.yml
+systemctl enable kibana
+systemctl start kibana
+
+# filebeat
+wget https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-oss-7.11.0-amd64.deb
+dpkg -i filebeat-*.deb
+
+#TODO: add preconfigured filebeat.yml
+#sudo mv /etc/filebeat/filebeat.yml /etc/filebeat/filebeat.yml.BCK
+
+echo "INFO: userdata finished"
