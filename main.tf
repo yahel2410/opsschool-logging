@@ -65,8 +65,7 @@ module "ec2-instance" {
   subnet_id                   = tolist(data.aws_subnet_ids.subnets.ids)[0]
   vpc_security_group_ids      = [module.security-group.this_security_group_id]
   associate_public_ip_address = true
-  user_data = templatefile("./userdata.sh.tmpl", {
-  })
+  user_data = file("./userdata.sh.tmpl")
 
   tags = {
     Terraform   = "true"
