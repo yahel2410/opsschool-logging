@@ -1,6 +1,6 @@
 # opsschool-logging
+ELK playground for OpsSchool logging sessions
 
-[WIP]
 ## Getting Started
 
 1. Clone the project
