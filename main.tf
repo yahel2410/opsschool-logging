@@ -37,7 +37,7 @@ module "security-group" {
   name   = "${var.prefix_name}-elk"
   vpc_id = data.aws_vpc.default.id
 
-  ingress_cidr_blocks = ["${data.http.myip.body}/32"]
+  ingress_cidr_blocks = ["${data.http.myip.body}/32", data.aws_vpc.default.cidr_block]
   ingress_rules = [
     "elasticsearch-rest-tcp",
     "elasticsearch-java-tcp",
@@ -71,4 +71,38 @@ module "ec2-instance" {
     Terraform   = "true"
     Environment = "dev"
   }
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
+# eks
+# ---------------------------------------------------------------------------------------------------------------------
+data "aws_eks_cluster" "cluster" {
+  name = module.eks.cluster_id
+}
+
+data "aws_eks_cluster_auth" "cluster" {
+  name = module.eks.cluster_id
+}
+
+module "eks" {
+  source          = "terraform-aws-modules/eks/aws"
+  version         = "16.0.0"
+
+  cluster_name    = "test-eks"
+  cluster_version = "1.20"
+  subnets         = data.aws_subnet_ids.subnets.ids
+
+  tags = {
+    Environment = "test"
+  }
+
+  vpc_id = data.aws_vpc.default.id
+
+  worker_groups = [
+    {
+      name                          = "worker-group-1"
+      instance_type                 = "t3.small"
+      asg_desired_capacity          = 2
+    }
+  ]
 }
