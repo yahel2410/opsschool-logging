@@ -28,3 +28,5 @@ ELK playground for OpsSchool logging sessions
    Notice: It takes 3-5 minutes for the ELK services to start
 
 5. Access your instance via ssh or Kibana url
+
+**Notice:** The instance is created in the `default vpc`
